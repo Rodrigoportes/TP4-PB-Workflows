@@ -25,17 +25,16 @@ jobs:
           cache: 'maven' # Configura o cache automático para dependências do Maven
 
       # 2. CRUCIAL: Configura um display virtual para o Selenium
+      # Usaremos a versão mais recente e estável para tentar resolver o erro de repositório.
       - name: Setup Virtual Display (Xvfb) 🖥️
-        # A referência correta para a ação popular de Xvfb
-        uses: cycjimmy/action-xvfb@v1
+        uses: cycjimmy/action-xvfb@v3
         with:
           # Inicia o Xvfb antes de executar os testes
           run: true
 
       # 3. Execução do Build, Testes Unitários e E2E (Requisito 3)
-      # O comando 'verify' do Maven executa o build e todos os testes.
       - name: Run Maven Build and Tests
         run: mvn clean verify -DskipTests=false
         env:
-          # Variável de ambiente para garantir que o Selenium use o display virtual
+          # Variável de ambiente necessária para o Selenium rodar no Xvfb
           DISPLAY: :99
