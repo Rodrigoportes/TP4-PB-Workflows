@@ -1,5 +1,7 @@
 name: Java CI Pipeline (Build & Test - Maven)
 
+name: Java CI Pipeline (Build & Test - Maven)
+
 # Dispara o workflow nos eventos de push e pull request para a branch 'main'
 on:
   push:
@@ -24,13 +26,16 @@ jobs:
           java-version: '17'
           cache: 'maven' # Configura o cache automático para dependências do Maven
 
-      # 2. CRUCIAL: Configura um display virtual para o Selenium
-      # Usaremos a versão mais recente e estável para tentar resolver o erro de repositório.
-      - name: Setup Virtual Display (Xvfb) 🖥️
-        uses: cycjimmy/action-xvfb@v3
-        with:
-          # Inicia o Xvfb antes de executar os testes
-          run: true
+      # 2. CRUCIAL: Configuração manual do Display Virtual (Corrige o erro de "repository not found")
+      - name: Setup Virtual Display (Manual Xvfb) 🖥️
+        run: |
+          # 1. Instala o pacote Xvfb
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          # 2. Inicia o display virtual em background
+          Xvfb :99 -ac -screen 0 1280x1024x24 &
+          # 3. Define a variável de ambiente DISPLAY para ser usada nos próximos passos (no Maven)
+          echo "DISPLAY=:99" >> $GITHUB_ENV
 
       # 3. Execução do Build, Testes Unitários e E2E (Requisito 3)
       - name: Run Maven Build and Tests
