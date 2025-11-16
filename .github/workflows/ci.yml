@@ -1,7 +1,5 @@
 name: Java CI Pipeline (Build & Test - Maven)
 
-name: Java CI Pipeline (Build & Test - Maven)
-
 # Dispara o workflow nos eventos de push e pull request para a branch 'main'
 on:
   push:
