@@ -16,23 +16,20 @@ jobs:
       - name: Checkout Code 🛎️
         uses: actions/checkout@v4
 
-      # 1. Configuração do Java e Cache do Maven (Requisito 3)
-      - name: Set up JDK 17
+      # 1. Configuração do Java e Cache do Maven (CORRIGIDO: Java 21)
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
-          cache: 'maven' # Configura o cache automático para dependências do Maven
+          java-version: '21' # A versão que o Maven exige
+          cache: 'maven'
 
-      # 2. CRUCIAL: Configuração manual do Display Virtual (Corrige o erro de "repository not found")
+      # 2. Configuração manual do Display Virtual (Correção para o erro de Xvfb)
       - name: Setup Virtual Display (Manual Xvfb) 🖥️
         run: |
-          # 1. Instala o pacote Xvfb
           sudo apt-get update
           sudo apt-get install -y xvfb
-          # 2. Inicia o display virtual em background
           Xvfb :99 -ac -screen 0 1280x1024x24 &
-          # 3. Define a variável de ambiente DISPLAY para ser usada nos próximos passos (no Maven)
           echo "DISPLAY=:99" >> $GITHUB_ENV
 
       # 3. Execução do Build, Testes Unitários e E2E (Requisito 3)
