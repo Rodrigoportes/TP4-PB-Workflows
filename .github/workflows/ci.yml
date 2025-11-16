@@ -26,9 +26,11 @@ jobs:
 
       # 2. CRUCIAL: Configura um display virtual para o Selenium
       - name: Setup Virtual Display (Xvfb) 🖥️
-        uses: xvfb-action/action@v1
+        # A referência correta para a ação popular de Xvfb
+        uses: cycjimmy/action-xvfb@v1
         with:
-          run: 'echo "Virtual display configurado."'
+          # Inicia o Xvfb antes de executar os testes
+          run: true
 
       # 3. Execução do Build, Testes Unitários e E2E (Requisito 3)
       # O comando 'verify' do Maven executa o build e todos os testes.
