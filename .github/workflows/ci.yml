@@ -1,0 +1,39 @@
+name: Java CI Pipeline (Build & Test - Maven)
+
+# Dispara o workflow nos eventos de push e pull request para a branch 'main'
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code 🛎️
+        uses: actions/checkout@v4
+
+      # 1. Configuração do Java e Cache do Maven (Requisito 3)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven' # Configura o cache automático para dependências do Maven
+
+      # 2. CRUCIAL: Configura um display virtual para o Selenium
+      - name: Setup Virtual Display (Xvfb) 🖥️
+        uses: xvfb-action/action@v1
+        with:
+          run: 'echo "Virtual display configurado."'
+
+      # 3. Execução do Build, Testes Unitários e E2E (Requisito 3)
+      # O comando 'verify' do Maven executa o build e todos os testes.
+      - name: Run Maven Build and Tests
+        run: mvn clean verify -DskipTests=false
+        env:
+          # Variável de ambiente para garantir que o Selenium use o display virtual
+          DISPLAY: :99
